@@ -29,41 +29,67 @@ var DomainAPIModel = function () {
         }
     }, {
         key: 'addLink',
-        value: function addLink(name, method, url) {
-            _lodash2.default.set(this.links, name, {
-                method: method,
-                url: url
-            });
+        value: function addLink(name, method, url, version) {
+            if (_lodash2.default.get(this.links, name)) {
+                var exists = _lodash2.default.get(this.links, name);
+                if (exists instanceof DomainAPIModel) {
+                    var lastKey = 0;
+                    _lodash2.default.forIn(exists.links, function (value, key) {
+                        lastKey = key;
+                    });
+                    lastKey++;
+                    if (version <= lastKey) {
+                        throw new Error('Version must increment.');
+                    }
+                    exists.addLink(version || lastKey, method, url, version || lastKey);
+                } else {
+                    var current = _lodash2.default.clone(exists);
+                    if (version <= current.version) {
+                        throw new Error('Version must increment.');
+                    }
+                    exists = new DomainAPIModel(name);
+                    exists.setDomainName(name);
+                    exists.addLink(current.version, current.method, current.url);
+                    exists.addLink(version || ++current.version, method, url, version || current.version);
+                    _lodash2.default.set(this.links, name, exists);
+                }
+            } else {
+                _lodash2.default.set(this.links, name, {
+                    method: method,
+                    url: '' + url + (version > 1 ? '/v' + version : ''),
+                    version: version || 1
+                });
+            }
         }
     }, {
         key: 'addPost',
-        value: function addPost(name, url) {
-            this.addLink(name, 'POST', url);
+        value: function addPost(name, url, ver) {
+            this.addLink(name, 'POST', url, ver);
         }
     }, {
         key: 'addPut',
-        value: function addPut(name, url) {
-            this.addLink(name, 'PUT', url);
+        value: function addPut(name, url, ver) {
+            this.addLink(name, 'PUT', url, ver);
         }
     }, {
         key: 'addGet',
-        value: function addGet(name, url) {
-            this.addLink(name, 'GET', url);
+        value: function addGet(name, url, ver) {
+            this.addLink(name, 'GET', url, ver);
         }
     }, {
         key: 'addDelete',
-        value: function addDelete(name, url) {
-            this.addLink(name, 'DELETE', url);
+        value: function addDelete(name, url, ver) {
+            this.addLink(name, 'DELETE', url, ver);
         }
     }, {
         key: 'addHead',
-        value: function addHead(name, url) {
-            this.addLink(name, 'HEAD', url);
+        value: function addHead(name, url, ver) {
+            this.addLink(name, 'HEAD', url, ver);
         }
     }, {
-        key: 'addPath',
-        value: function addPath(name, url) {
-            this.addLink(name, 'PATCH', url);
+        key: 'addPatch',
+        value: function addPatch(name, url, ver) {
+            this.addLink(name, 'PATCH', url, ver);
         }
     }]);
 

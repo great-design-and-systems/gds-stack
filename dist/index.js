@@ -24,7 +24,8 @@ module.exports = {
     Logger: _logger.Logger,
     ExpressApp: _server.ExpressApp,
     GDSDomainApi: _model.DomainApi,
-    GDSDomainDTO: _model.DomainDTO
+    GDSDomainDTO: _model.DomainDTO,
+    GDSDomainResource: _model.DomainResource
 };
 
 (0, _fluidChains.ExecuteChain)([_logger.LOGGER_CONFIG, _database.MONGO_CONFIG, _database.MONGO_CONNECT, _server.GDS_SERVER_CONFIG, _server.GDS_SERVER_CONNECT_MULTIPARTY, _server.GDS_SERVER_HTTP_LISTENER, _server.GDS_SERVER_HTTPS_LISTENER], {

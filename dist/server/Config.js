@@ -21,6 +21,14 @@ var _express = require('express');
 
 var _express2 = _interopRequireDefault(_express);
 
+var _http = require('http');
+
+var _http2 = _interopRequireDefault(_http);
+
+var _https = require('https');
+
+var _https2 = _interopRequireDefault(_https);
+
 var _morgan = require('morgan');
 
 var _morgan2 = _interopRequireDefault(_morgan);
@@ -34,6 +42,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var PORT = process.env.PORT || 5000;
 var ENV = process.env.APP_ENV || 'dev';
 var app = (0, _express2.default)();
+
 var ExpressApp = exports.ExpressApp = app;
 var ServerConfigChainAction = function ServerConfigChainAction(context, param, next) {
     app.use((0, _morgan2.default)(ENV));
@@ -60,12 +69,20 @@ var ServerConfigChainAction = function ServerConfigChainAction(context, param, n
 var ServerConfigChain = new _fluidChains.Chain(_Chain.GDS_SERVER_CONFIG, ServerConfigChainAction);
 ServerConfigChain.addSpec('domainApi', false);
 
-var ServerListenerChainAction = function ServerListenerChainAction(context, param, next) {
-    var port = param.port ? param.port() : '8080';
-    app.listen(port, function () {
-        console.log('Express is listening to port ' + port);
-        next();
-    });
+var ServerHTTPListenerChainAction = function ServerHTTPListenerChainAction(context, param, next) {
+    var port = param.port ? param.port() : '80';
+    _http2.default.createServer(app).listen(port);
+    console.log('HTTP is listening to port', port);
+    next();
 };
-var ServerListenerChain = new _fluidChains.Chain(_Chain.GDS_SERVER_LISTENER, ServerListenerChainAction);
-ServerListenerChain.addSpec('port', false);
+var ServerHTTPListenerChain = new _fluidChains.Chain(_Chain.GDS_SERVER_HTTP_LISTENER, ServerHTTPListenerChainAction);
+ServerHTTPListenerChain.addSpec('port', false);
+
+var ServerHTTPSListenerChainAction = function ServerHTTPSListenerChainAction(context, param, next) {
+    var port = param.httpsPort ? param.httpsPort() : '443';
+    _https2.default.createServer(app).listen(port);
+    console.log('HTTPS is listening to port', port);
+    next();
+};
+var ServerHTTPSListenerChain = new _fluidChains.Chain(_Chain.GDS_SERVER_HTTPS_LISTENER, ServerHTTPSListenerChainAction);
+ServerHTTPSListenerChain.addSpec('httpsPort', false);

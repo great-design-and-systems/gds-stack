@@ -44,6 +44,8 @@ var ENV = process.env.APP_ENV || 'dev';
 var app = (0, _express2.default)();
 
 var ExpressApp = exports.ExpressApp = app;
+
+// ServerConfigChain
 var ServerConfigChainAction = function ServerConfigChainAction(context, param, next) {
     app.use((0, _morgan2.default)(ENV));
     app.use(_bodyParser2.default.urlencoded({
@@ -54,11 +56,6 @@ var ServerConfigChainAction = function ServerConfigChainAction(context, param, n
     app.use(_bodyParser2.default.json({
         type: 'application/vnd.api+json'
     }));
-    if (process.env.TEMP_DIR) {
-        app.use((0, _connectMultiparty2.default)({
-            uploadDir: process.env.TEMP_DIR || 'files'
-        }));
-    }
     if (param.domainApi) {
         app.get('/', function (req, res) {
             res.status(200).send(param.domainApi());
@@ -69,6 +66,17 @@ var ServerConfigChainAction = function ServerConfigChainAction(context, param, n
 var ServerConfigChain = new _fluidChains.Chain(_Chain.GDS_SERVER_CONFIG, ServerConfigChainAction);
 ServerConfigChain.addSpec('domainApi', false);
 
+//ServerConnectMultipartyChain
+var ServerConnectMultipartyAction = function ServerConnectMultipartyAction(context, param, next) {
+    app.use((0, _connectMultiparty2.default)({
+        uploadDir: param.tempDir()
+    }));
+    next();
+};
+var ServerConnectMultipartyChain = new _fluidChains.Chain(_Chain.GDS_SERVER_CONNECT_MULTIPARTY, ServerConnectMultipartyAction);
+ServerConnectMultipartyChain.addSpec('tempDir', true);
+
+//ServerHTTPListenerChain
 var ServerHTTPListenerChainAction = function ServerHTTPListenerChainAction(context, param, next) {
     var port = param.port ? param.port() : '80';
     _http2.default.createServer(app).listen(port);
@@ -78,6 +86,7 @@ var ServerHTTPListenerChainAction = function ServerHTTPListenerChainAction(conte
 var ServerHTTPListenerChain = new _fluidChains.Chain(_Chain.GDS_SERVER_HTTP_LISTENER, ServerHTTPListenerChainAction);
 ServerHTTPListenerChain.addSpec('port', false);
 
+//ServerHTTPSListenerChain
 var ServerHTTPSListenerChainAction = function ServerHTTPSListenerChainAction(context, param, next) {
     var port = param.httpsPort ? param.httpsPort() : '443';
     _https2.default.createServer(app).listen(port);

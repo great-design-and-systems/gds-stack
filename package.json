@@ -1,0 +1,47 @@
+{
+  "name": "gds-stack",
+  "version": "0.1.0",
+  "description": "Stack of all Great design and Syetems NodeJS Technologies",
+  "main": "dist/index.js",
+  "scripts": {
+    "babel-node": "node_modules/.bin/babel-node",
+    "babel": "node_modules/.bin/babel",
+    "dev": "nodemon --exec babel-node src/index.js",
+    "prestart": "babel src --out-dir dist",
+    "start": "node dist/index.js",
+    "compile": "babel src --out-dir dist",
+    "coveralls": "cat ./coverage/lcov.info | coveralls",
+    "test": "npm run compile && mocha --compilers js:babel-core/register"
+  },
+  "keywords": [
+    "gds-stack"
+  ],
+  "author": "Jerico de Guzman",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "configstore": "^3.1.0",
+    "connect-multiparty": "^2.0.0",
+    "cookie-parser": "^1.4.3",
+    "express": "^4.15.3",
+    "fluid-chains": "^0.4.0",
+    "lodash": "^4.17.4",
+    "log4js": "^1.1.1",
+    "mongoose": "^4.11.0",
+    "morgan": "^1.8.2"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-plugin-transform-decorators": "^6.24.1",
+    "babel-plugin-transform-decorators-legacy": "^1.3.4",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-stage-3": "^6.24.1",
+    "chai": "^3.5.0",
+    "coveralls": "^2.13.1",
+    "expect": "^1.20.2",
+    "isparta": "^4.0.0",
+    "mocha": "^3.4.1",
+    "nodemon": "^1.11.0",
+    "sinon": "^2.2.0"
+  }
+}

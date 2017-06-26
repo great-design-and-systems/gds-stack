@@ -53,3 +53,45 @@ GDS-stack uses our very own [fluid-chains](https://rickzx98.github.io/fluid-chai
 
 
 ```
+
+### Docker Configuration
+  
+For linked containers
+
+Chain    |Parameter | Description | value   | default
+---------|----------|------------|---------| ----------
+DOCKER_CONNECT | docker_proxyHost| proxy host | ?String | none
+DOCKER_CONNECT | docker_proxyPort| proxy port | ?Number | none
+DOCKER_CONNECT | docker_serviceRetry| number of retries | *Number | none
+DOCKER_CONNECT | docker_serviceTimeout| timeout in milisecond | ?Number | 5000
+
+### Logger Configuration
+
+For log4js configuration
+
+
+Chain    |Parameter | Description | value   | default
+---------|----------|-------------|---------| ----------
+LOGGER_CONFIG | logger_name| name of logger | *String | none
+LOGGER_CONFIG | logger_filePath| absolute path of the log file | *String | none
+LOGGER_CONFIG | logger_level| level of logs to write | ?String | all
+
+### Database Configuration
+
+
+Chain    |Parameter | Description | value   | default
+---------|----------|-------------|---------| ----------
+MONGO_CONFIG | mongo_port | mongo database port| ?Number | 27017
+MONGO_CONFIG | mongo_host | mongo database host |  *String | localhost
+MONGO_CONFIG | mongo_databaseName | mongo database name | *String | none
+MONGO_CONFIG | mongo_user | mongo database username | ?String | none
+MONGO_CONFIG | mongo_password | mongo database password | ?String | none
+
+### Server Configuration
+
+Chain    |Parameter | Description | value   | default
+---------|----------|-------------|---------| ----------
+GDS_SERVER_CONFIG | server_domainApi | domain dto object of the current app service | ?GDSDomainDTO | none
+GDS_SERVER_CONNECT_MULTIPARTY | server_tempDir | file directory path |  *String | none
+GDS_SERVER_HTTP_LISTENER | server_port | express server http port | ?Number | 80
+GDS_SERVER_HTTPS_LISTENER | server_httpsPort | express server https port| ?Number  | 443

@@ -8,14 +8,14 @@ export const Logger = (loggerName) => {
 }
 const LoggerConfigAction = (context, param, next) => {
     log4js.loadAppender('file');
-    log4js.addAppender(log4js.appenders.file(param.loggerFilePath()), param.loggerName());
-    if (param.level) {
-        log4js.setLevel(param.level());
+    log4js.addAppender(log4js.appenders.file(param.logger_filePath()), param.logger_name());
+    if (param.logger_level) {
+        log4js.setLevel(param.logger_level());
     }
     next();
 }
 const LoggerConfigChain = new Chain(LOGGER_CONFIG, LoggerConfigAction);
 
-LoggerConfigChain.addSpec('loggerFilePath', true);
-LoggerConfigChain.addSpec('loggerName', true);
-LoggerConfigChain.addSpec('level', false);
+LoggerConfigChain.addSpec('logger_filePath', true);
+LoggerConfigChain.addSpec('logger_name', true);
+LoggerConfigChain.addSpec('logger_level', false);

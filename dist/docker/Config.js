@@ -28,7 +28,7 @@ var DockerConfig = new _fluidChains.Chain(_Chain.DOCKER_CONFIG, function (contex
                 microservices.push(value);
             }
         });
-        context.set('microservices', microservices);
+        context.set('docker_microservices', microservices);
         next();
     } catch (err) {
         next(err);
@@ -38,9 +38,9 @@ var DockerConfig = new _fluidChains.Chain(_Chain.DOCKER_CONFIG, function (contex
 var DockerConnect = new _fluidChains.Chain(_Chain.DOCKER_CONNECT, function (context, param, next) {
     try {
         var domains = {};
-        if (param.microservices) {
-            (0, _batchflow2.default)(param.microservices()).sequential().each(function (i, url, n) {
-                (0, _util.checkAndGetApi)(param.proxyHost ? param.proxyHost() : undefined, param.proxyPort ? param.proxyPort() : undefined, param.serviceRetry ? param.serviceRetry() : undefined, param.serviceTimeout ? param.serviceTimeout() : undefined, url, function (err, data) {
+        if (param.docker_microservices) {
+            (0, _batchflow2.default)(param.docker_microservices()).sequential().each(function (i, url, n) {
+                (0, _util.checkAndGetApi)(param.docker_proxyHost ? param.docker_proxyHost() : undefined, param.docker_proxyPort ? param.docker_proxyPort() : undefined, param.docker_serviceRetry ? param.docker_serviceRetry() : undefined, param.docker_serviceTimeout ? param.docker_serviceTimeout() : undefined, url, function (err, data) {
                     if (err) {
                         n();
                     } else {
@@ -51,7 +51,7 @@ var DockerConnect = new _fluidChains.Chain(_Chain.DOCKER_CONNECT, function (cont
                     }
                 });
             }).end(function () {
-                context.set('domains', domains);
+                context.set('docker_domains', domains);
                 next();
             });
         }
@@ -59,18 +59,18 @@ var DockerConnect = new _fluidChains.Chain(_Chain.DOCKER_CONNECT, function (cont
         next(err);
     }
 });
-DockerConnect.addSpec('proxyHost', false);
-DockerConnect.addSpec('proxyPort', false);
-DockerConnect.addSpec('serviceRetry', false);
-DockerConnect.addSpec('serviceTimeout', false);
-DockerConnect.addSpec('microservices', false);
+DockerConnect.addSpec('docker_proxyHost', false);
+DockerConnect.addSpec('docker_proxyPort', false);
+DockerConnect.addSpec('docker_serviceRetry', false);
+DockerConnect.addSpec('docker_serviceTimeout', false);
+DockerConnect.addSpec('docker_microservices', false);
 
 var DockerCreateAPIChains = new _fluidChains.Chain(_Chain.DOCKER_CREATE_API_CHAINS, function (context, param, next) {
-    var domains = param.domains();
+    var domains = param.docker_domains();
     _lodash2.default.forIn(domains, function (domain, field) {
         (0, _util.createChains)(field, domain);
     });
     next();
 });
 
-DockerCreateAPIChains.addSpec('domains', true);
+DockerCreateAPIChains.addSpec('docker_domains', true);

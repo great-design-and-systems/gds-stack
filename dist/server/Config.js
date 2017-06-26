@@ -56,42 +56,42 @@ var ServerConfigChainAction = function ServerConfigChainAction(context, param, n
     app.use(_bodyParser2.default.json({
         type: 'application/vnd.api+json'
     }));
-    if (param.domainApi) {
-        app.get('/', function (req, res) {
-            res.status(200).send(param.domainApi());
+    if (param.server_domainApi) {
+        app.get('/api', function (req, res) {
+            res.status(200).send(param.server_domainApi());
         });
     }
     next();
 };
 var ServerConfigChain = new _fluidChains.Chain(_Chain.GDS_SERVER_CONFIG, ServerConfigChainAction);
-ServerConfigChain.addSpec('domainApi', false);
+ServerConfigChain.addSpec('server_domainApi', false);
 
 //ServerConnectMultipartyChain
 var ServerConnectMultipartyAction = function ServerConnectMultipartyAction(context, param, next) {
     app.use((0, _connectMultiparty2.default)({
-        uploadDir: param.tempDir()
+        uploadDir: param.server_tempDir()
     }));
     next();
 };
 var ServerConnectMultipartyChain = new _fluidChains.Chain(_Chain.GDS_SERVER_CONNECT_MULTIPARTY, ServerConnectMultipartyAction);
-ServerConnectMultipartyChain.addSpec('tempDir', true);
+ServerConnectMultipartyChain.addSpec('server_tempDir', true);
 
 //ServerHTTPListenerChain
 var ServerHTTPListenerChainAction = function ServerHTTPListenerChainAction(context, param, next) {
-    var port = param.port ? param.port() : '80';
+    var port = param.server_port ? param.server_port() : '80';
     _http2.default.createServer(app).listen(port);
     console.log('HTTP is listening to port', port);
     next();
 };
 var ServerHTTPListenerChain = new _fluidChains.Chain(_Chain.GDS_SERVER_HTTP_LISTENER, ServerHTTPListenerChainAction);
-ServerHTTPListenerChain.addSpec('port', false);
+ServerHTTPListenerChain.addSpec('server_port', false);
 
 //ServerHTTPSListenerChain
 var ServerHTTPSListenerChainAction = function ServerHTTPSListenerChainAction(context, param, next) {
-    var port = param.httpsPort ? param.httpsPort() : '443';
+    var port = param.server_httpsPort ? param.server_httpsPort() : '443';
     _https2.default.createServer(app).listen(port);
     console.log('HTTPS is listening to port', port);
     next();
 };
 var ServerHTTPSListenerChain = new _fluidChains.Chain(_Chain.GDS_SERVER_HTTPS_LISTENER, ServerHTTPSListenerChainAction);
-ServerHTTPSListenerChain.addSpec('httpsPort', false);
+ServerHTTPSListenerChain.addSpec('server_httpsPort', false);

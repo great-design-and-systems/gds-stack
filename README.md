@@ -29,7 +29,8 @@ GDS-stack uses our very own [fluid-chains](https://rickzx98.github.io/fluid-chai
     var ServerChains = GDS.ServerChains;
     var LoggerChains = GDS.LoggerChains;
     var Logger = GDS.Logger;
-
+    var ExpressApp = GDS.ExpressApp;
+    
     ExecuteChain([
         DockerChains.DOCKER_CONFIG,
         DockerChains.DOCKER_CONNECT,
@@ -51,7 +52,11 @@ GDS-stack uses our very own [fluid-chains](https://rickzx98.github.io/fluid-chai
      },
      function(result) {
         Logger('SampleLogger').info('Server in running Express on port 8080');
+        ExpressApp.get('/', function(req, res) {
+            res.status(200).send('hello world');
+        });
      });  
-
+        
+        
 
 ```

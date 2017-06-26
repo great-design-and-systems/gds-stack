@@ -1,7 +1,9 @@
+
 # Gds-stack
 
 Another utilization of NodeJS technologies in one package.
 ## Technologies supported and available
+- [Fluid-chains](https://rickzx98.github.io/fluid-chains/)
 - [Express](http://expressjs.com/)
 - [Docker](https://www.docker.com/)
 - [MongoDB](https://www.mongodb.com/)
@@ -27,7 +29,8 @@ GDS-stack uses our very own [fluid-chains](https://rickzx98.github.io/fluid-chai
     var ServerChains = GDS.ServerChains;
     var LoggerChains = GDS.LoggerChains;
     var Logger = GDS.Logger;
-
+    var ExpressApp = GDS.ExpressApp;
+    
     ExecuteChain([
         DockerChains.DOCKER_CONFIG,
         DockerChains.DOCKER_CONNECT,
@@ -49,8 +52,10 @@ GDS-stack uses our very own [fluid-chains](https://rickzx98.github.io/fluid-chai
      },
      function(result) {
         Logger('SampleLogger').info('Server in running Express on port 8080');
+        ExpressApp.get('/', function(req, res) {
+            res.status(200).send('hello world');
+        });
      });  
-
 
 ```
 
@@ -95,3 +100,4 @@ GDS_SERVER_CONFIG | server_domainApi | domain dto object of the current app serv
 GDS_SERVER_CONNECT_MULTIPARTY | server_tempDir | file directory path |  *String | none
 GDS_SERVER_HTTP_LISTENER | server_port | express server http port | ?Number | 80
 GDS_SERVER_HTTPS_LISTENER | server_httpsPort | express server https port| ?Number  | 443
+

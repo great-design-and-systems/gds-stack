@@ -1,3 +1,4 @@
+import { DOCKER_CONFIG, DOCKER_CONNECT } from './docker/';
 import { ExpressApp, GDS_SERVER_CONFIG, GDS_SERVER_CONNECT_MULTIPARTY, GDS_SERVER_HTTPS_LISTENER, GDS_SERVER_HTTP_LISTENER } from './server/';
 import { DomainApi as GDSDomainApi, DomainDTO as GDSDomainDTO, DomainResource as GDSDomainResource } from './model';
 import { LOGGER_CONFIG, Logger } from './logger/';
@@ -16,6 +17,10 @@ module.exports = {
         MONGO_CONFIG,
         MONGO_CONNECT
     },
+    DockerChains: {
+        DOCKER_CONFIG,
+        DOCKER_CONNECT
+    },
     Logger,
     ExpressApp,
     GDSDomainApi,
@@ -24,7 +29,7 @@ module.exports = {
 }
 
 
-ExecuteChain([LOGGER_CONFIG, MONGO_CONFIG, MONGO_CONNECT, GDS_SERVER_CONFIG, GDS_SERVER_CONNECT_MULTIPARTY, GDS_SERVER_HTTP_LISTENER, GDS_SERVER_HTTPS_LISTENER], {
+ExecuteChain([DOCKER_CONFIG, LOGGER_CONFIG, MONGO_CONFIG, MONGO_CONNECT, GDS_SERVER_CONFIG, GDS_SERVER_CONNECT_MULTIPARTY, GDS_SERVER_HTTP_LISTENER, GDS_SERVER_HTTPS_LISTENER], {
     databaseName: 'data-sample-db',
     retry: 5,
     loggerName: 'SampleLogger',

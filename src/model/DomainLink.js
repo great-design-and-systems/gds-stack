@@ -1,6 +1,6 @@
 export default class DomainLink {
-    constructor(action, name, url, version) {
-        this.action = action;
+    constructor(method, name, url, version) {
+        this.method = method;
         this.name = name;
         this.url = url;
         this.version = version;

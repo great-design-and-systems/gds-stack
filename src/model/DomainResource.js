@@ -4,7 +4,6 @@ import DomainLink from './DomainLink';
 const protocol = (req) => {
     return req.connection.encrypted ? 'https://' : 'http://';
 }
-
 const addApiName = (api) => {
     if (api.indexOf(0) !== '/') {
         api = '/' + api;
@@ -46,9 +45,8 @@ export default class DomainResource {
         }
     }
 }
-
 const buildDomainDto = (domainActions, protocol, host, api) => {
-    const dto = new DomainDtoModel();
+    const dto = new DomainDtoModel('DOMAIN_RESOURCE');
     domainActions.forEach(domain => {
         switch (domain.method) {
             case 'Get':

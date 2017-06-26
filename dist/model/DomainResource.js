@@ -20,7 +20,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var protocol = function protocol(req) {
     return req.connection.encrypted ? 'https://' : 'http://';
 };
-
 var addApiName = function addApiName(api) {
     if (api.indexOf(0) !== '/') {
         api = '/' + api;
@@ -63,9 +62,8 @@ var DomainResource = function DomainResource(app, api) {
 
 exports.default = DomainResource;
 
-
 var buildDomainDto = function buildDomainDto(domainActions, protocol, host, api) {
-    var dto = new _DomainDTO2.default();
+    var dto = new _DomainDTO2.default('DOMAIN_RESOURCE');
     domainActions.forEach(function (domain) {
         switch (domain.method) {
             case 'Get':

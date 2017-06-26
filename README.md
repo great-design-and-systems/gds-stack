@@ -1,7 +1,9 @@
+
 # Gds-stack
 
 Another utilization of NodeJS technologies in one package.
 ## Technologies supported and available
+- [Fluid-chains](https://rickzx98.github.io/fluid-chains/)
 - [Express](http://expressjs.com/)
 - [Docker](https://www.docker.com/)
 - [MongoDB](https://www.mongodb.com/)

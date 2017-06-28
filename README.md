@@ -17,7 +17,7 @@ Another utilization of NodeJS technologies in one package.
 
 ### Sample configuration
 
-GDS-stack uses our very own [fluid-chains](https://rickzx98.github.io/fluid-chains/) for processing chain of configurations and for you to inject your own configuration.
+GDS-stack uses our very own [fluid-chains](https://rickzx98.github.io/fluid-chains/) to process configurations and for you to add your own chain.
 
 
 ```javascript

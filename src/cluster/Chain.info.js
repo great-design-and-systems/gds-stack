@@ -1,0 +1,1 @@
+export const CLUSTER_CONFIG = 'GDS.cluster.ClusterConfig';

@@ -9,7 +9,5 @@ var _Config2 = _interopRequireDefault(_Config);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 module.exports = {
-    DatabaseChains: {
-        MONGO_CONFIG: _Chain.MONGO_CONFIG, MONGO_CONNECT: _Chain.MONGO_CONNECT
-    }
+    ClusterChains: { CLUSTER_CONFIG: _Chain.CLUSTER_CONFIG }
 };

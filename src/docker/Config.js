@@ -1,4 +1,4 @@
-import { DOCKER_CONFIG, DOCKER_CONNECT, DOCKER_CREATE_API_CHAINS } from './Chain.info';
+import { CONVERT_TO_SERVER_ADDRESSES, DOCKER_CONFIG, DOCKER_CONNECT, DOCKER_CREATE_API_CHAINS } from './Chain.info';
 import { changeDefaultProtocol, checkAndGetApi, createChains, getServiceActions } from './util';
 
 import { Chain } from 'fluid-chains';
@@ -20,6 +20,28 @@ const DockerConfig = new Chain(DOCKER_CONFIG, (context, param, next) => {
         next(err);
     }
 });
+
+const ConvertToServerAddresssesChain = new Chain(CONVERT_TO_SERVER_ADDRESSES, (context, param, next) => {
+    const serviceAddresses = [];
+    try {
+        const dockerServices = param.docker_microservices() || [];
+        dockerServices.forEach(serviceUrl => {
+            serviceUrl = changeDefaultProtocol(serviceUrl);
+            const parsedUrl = serviceUrl.split(':');
+            const host = parsedUrl[0];
+            const port = parsedUrl[1];
+            serviceAddresses.push({
+                host,
+                port
+            });
+        });
+        context.set('server_addresses', serviceAddresses);
+        next();
+    } catch (err) {
+        next(err);
+    }
+});
+ConvertToServerAddresssesChain.addSpec('docker_microservices', true);
 
 const DockerConnect = new Chain(DOCKER_CONNECT, (context, param, next) => {
     try {

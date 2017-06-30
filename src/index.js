@@ -1,28 +1,17 @@
-import { DOCKER_CONFIG, DOCKER_CONNECT, DOCKER_CREATE_API_CHAINS } from './docker/';
-import { ExpressApp, GDS_SERVER_CONFIG, GDS_SERVER_CONNECT_MULTIPARTY, GDS_SERVER_HTTPS_LISTENER, GDS_SERVER_HTTP_LISTENER } from './server/';
+import { ExpressApp, ServerChains } from './server/';
 import { DomainApi as GDSDomainApi, DomainDTO as GDSDomainDTO, DomainResource as GDSDomainResource } from './model';
-import { LOGGER_CONFIG, Logger } from './logger/';
-import { MONGO_CONFIG, MONGO_CONNECT } from './database/';
+import { Logger, LoggerChains } from './logger/';
+
+import { ClusterChains } from './cluster/';
+import { DatabaseChains } from './database/';
+import { DockerChains } from './docker/';
 
 module.exports = {
-    ServerChains: {
-        GDS_SERVER_CONFIG,
-        GDS_SERVER_HTTPS_LISTENER,
-        GDS_SERVER_HTTP_LISTENER,
-        GDS_SERVER_CONNECT_MULTIPARTY
-    },
-    DatabaseChains: {
-        MONGO_CONFIG,
-        MONGO_CONNECT
-    },
-    DockerChains: {
-        DOCKER_CONFIG,
-        DOCKER_CONNECT,
-        DOCKER_CREATE_API_CHAINS
-    },
-    LoggerChains: {
-        LOGGER_CONFIG
-    },
+    ServerChains,
+    DatabaseChains,
+    DockerChains,
+    LoggerChains,
+    ClusterChains,
     Logger,
     ExpressApp,
     GDSDomainApi,

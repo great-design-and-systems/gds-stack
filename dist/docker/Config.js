@@ -35,6 +35,28 @@ var DockerConfig = new _fluidChains.Chain(_Chain.DOCKER_CONFIG, function (contex
     }
 });
 
+var ConvertToServerAddresssesChain = new _fluidChains.Chain(_Chain.CONVERT_TO_SERVER_ADDRESSES, function (context, param, next) {
+    var serviceAddresses = [];
+    try {
+        var dockerServices = param.docker_microservices() || [];
+        dockerServices.forEach(function (serviceUrl) {
+            serviceUrl = (0, _util.changeDefaultProtocol)(serviceUrl);
+            var parsedUrl = serviceUrl.split(':');
+            var host = parsedUrl[0];
+            var port = parsedUrl[1];
+            serviceAddresses.push({
+                host: host,
+                port: port
+            });
+        });
+        context.set('server_addresses', serviceAddresses);
+        next();
+    } catch (err) {
+        next(err);
+    }
+});
+ConvertToServerAddresssesChain.addSpec('docker_microservices', true);
+
 var DockerConnect = new _fluidChains.Chain(_Chain.DOCKER_CONNECT, function (context, param, next) {
     try {
         var domains = {};

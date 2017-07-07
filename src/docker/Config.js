@@ -1,7 +1,7 @@
-import { CONVERT_TO_SERVER_ADDRESSES, DOCKER_CONFIG, DOCKER_CONNECT, DOCKER_CREATE_API_CHAINS } from './Chain.info';
+import { CONVERT_TO_SERVER_ADDRESSES, DOCKER_CONFIG, DOCKER_CONNECT, DOCKER_CREATE_API_CHAINS, DOCKER_CREATE_CHAIN_MIDDLEWARE } from './Chain.info';
+import { Chain, ChainMiddleware } from 'fluid-chains';
 import { changeDefaultProtocol, checkAndGetApi, createChains, getServiceActions } from './util';
 
-import { Chain } from 'fluid-chains';
 import batch from 'batchflow';
 import lodash from 'lodash';
 import restler from 'restler';
@@ -93,3 +93,13 @@ const DockerCreateAPIChains = new Chain(DOCKER_CREATE_API_CHAINS, (context, para
 });
 
 DockerCreateAPIChains.addSpec('docker_domains', true);
+
+const DockerCreateChainMiddleware = new Chain(DOCKER_CREATE_CHAIN_MIDDLEWARE, (context, param) => {
+    new ChainMiddleware(/({)([a-zA-Z]*)(\.)([a-zA-Z]*)(})/g, (param, context, next) => {
+        const owner = context.$owner();
+        const options = param.options ? param.options() : {};
+        next();
+    });
+});
+
+DockerCreateChainMiddleware.addSpec('docker_domain');

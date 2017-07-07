@@ -138,7 +138,7 @@ export const createChains = (domainName, domainActions) => {
                 });
             });
             console.log('creating chain...', chainAction.info());
-            chainAction.addSpec('options', false);
+            chainAction.addSpec('options');
         }
     })
 }

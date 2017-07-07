@@ -150,7 +150,7 @@ var createChains = exports.createChains = function createChains(domainName, doma
                 });
             });
             console.log('creating chain...', chainAction.info());
-            chainAction.addSpec('options', false);
+            chainAction.addSpec('options');
         }
     });
 };

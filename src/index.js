@@ -11,9 +11,7 @@ import {
   Logger,
   LoggerChains
 } from './logger/';
-import {
-  UtilChains
-} from './util/';
+
 import {
   ClusterChains
 } from './cluster/';
@@ -23,6 +21,9 @@ import {
 import {
   DockerChains
 } from './docker/';
+import {
+  UtilChains
+} from './util/';
 
 module.exports = {
   ServerChains,

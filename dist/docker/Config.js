@@ -2,9 +2,9 @@
 
 var _Chain = require('./Chain.info');
 
-var _util = require('./util');
-
 var _fluidChains = require('fluid-chains');
+
+var _util = require('./util');
 
 var _batchflow = require('batchflow');
 
@@ -96,3 +96,13 @@ var DockerCreateAPIChains = new _fluidChains.Chain(_Chain.DOCKER_CREATE_API_CHAI
 });
 
 DockerCreateAPIChains.addSpec('docker_domains', true);
+
+var DockerCreateChainMiddleware = new _fluidChains.Chain(_Chain.DOCKER_CREATE_CHAIN_MIDDLEWARE, function (context, param) {
+    new _fluidChains.ChainMiddleware(/({)([a-zA-Z]*)(\.)([a-zA-Z]*)(})/g, function (param, context, next) {
+        var owner = context.$owner();
+        var options = param.options ? param.options() : {};
+        next();
+    });
+});
+
+DockerCreateChainMiddleware.addSpec('docker_domain');

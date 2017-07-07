@@ -6,13 +6,13 @@ var _model = require('./model');
 
 var _logger = require('./logger/');
 
-var _util = require('./util/');
-
 var _cluster = require('./cluster/');
 
 var _database = require('./database/');
 
 var _docker = require('./docker/');
+
+var _util = require('./util/');
 
 module.exports = {
   ServerChains: _server.ServerChains,

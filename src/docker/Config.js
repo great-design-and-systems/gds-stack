@@ -95,11 +95,12 @@ const DockerCreateAPIChains = new Chain(DOCKER_CREATE_API_CHAINS, (context, para
 DockerCreateAPIChains.addSpec('docker_domains', true);
 
 const DockerCreateChainMiddleware = new Chain(DOCKER_CREATE_CHAIN_MIDDLEWARE, (context, param) => {
-    new ChainMiddleware(/({)([a-zA-Z]*)(\.)([a-zA-Z]*)(})/g, (param, context, next) => {
+  const domains = param.docker_domains(); 
+  new ChainMiddleware(/({)([a-zA-Z]*)(\.)([a-zA-Z]*)(})/g, (param, context, next) => {
         const owner = context.$owner();
         const options = param.options ? param.options() : {};
         next();
     });
 });
 
-DockerCreateChainMiddleware.addSpec('docker_domain');
+DockerCreateChainMiddleware.addSpec('docker_domains',true);

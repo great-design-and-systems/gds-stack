@@ -113,3 +113,10 @@ GDS_SERVER_HTTPS_(PROXY)_LISTENER | server_encoding        | server file encodin
 Chain         |Parameter      | Description          | value         | default
 --------------|---------------|----------------------|---------------|-------------
 CLUSTER_CONFIG|cluster_max_cpu| Number of cpu to fork|?Number        | os cpu count
+
+
+### Utility
+
+Chain                             |Parameter               | Description                                   | value                | default
+----------------------------------|------------------------|-----------------------------------------------|----------------------| ----------
+INPUT_HANDLER                     | util_inputMap          | maps the process.argv value to a context field| *{argv[index]:String}| none

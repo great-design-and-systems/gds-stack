@@ -10,7 +10,7 @@ var _mongoose2 = _interopRequireDefault(_mongoose);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var MongoConfigAction = function MongoConfigAction(context, param, next) {
+var MongoConfigAction = function MongoConfigAction(context, param) {
     var port = param.mongo_port ? param.mongo_port() : 27017;
     var host = param.mongo_host ? param.mongo_host() : 'localhost';
     var databaseName = param.mongo_databaseName();
@@ -28,7 +28,6 @@ var MongoConfigAction = function MongoConfigAction(context, param, next) {
     url += '/';
     url += databaseName;
     context.set('mongo_url', url);
-    next();
 };
 
 var MongoConfigChain = new _fluidChains.Chain(_Chain.MONGO_CONFIG, MongoConfigAction);
@@ -38,7 +37,7 @@ MongoConfigChain.addSpec('mongo_databaseName', true);
 MongoConfigChain.addSpec('mongo_user', false);
 MongoConfigChain.addSpec('mongo_password', false);
 
-var MongoConnectAction = function MongoConnectAction(context, param, next, tries) {
+var MongoConnect = function MongoConnect(context, param, next, tries) {
     if (!tries) {
         tries = 0;
     }
@@ -59,6 +58,8 @@ var MongoConnectAction = function MongoConnectAction(context, param, next, tries
     }
 };
 
-var MongoConnectChain = new _fluidChains.Chain(_Chain.MONGO_CONNECT, MongoConnectAction);
+var MongoConnectChain = new _fluidChains.Chain(_Chain.MONGO_CONNECT, function (context, param, next) {
+    MongoConnect(context, param, next);
+});
 MongoConnectChain.addSpec('mongo_url', true);
 MongoConnectChain.addSpec('mongo_retry', true);

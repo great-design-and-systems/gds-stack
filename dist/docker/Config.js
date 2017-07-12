@@ -98,6 +98,7 @@ var DockerCreateAPIChains = new _fluidChains.Chain(_Chain.DOCKER_CREATE_API_CHAI
 DockerCreateAPIChains.addSpec('docker_domains', true);
 
 var DockerCreateChainMiddleware = new _fluidChains.Chain(_Chain.DOCKER_CREATE_CHAIN_MIDDLEWARE, function (context, param) {
+    var domains = param.docker_domains();
     new _fluidChains.ChainMiddleware(/({)([a-zA-Z]*)(\.)([a-zA-Z]*)(})/g, function (param, context, next) {
         var owner = context.$owner();
         var options = param.options ? param.options() : {};
@@ -105,4 +106,4 @@ var DockerCreateChainMiddleware = new _fluidChains.Chain(_Chain.DOCKER_CREATE_CH
     });
 });
 
-DockerCreateChainMiddleware.addSpec('docker_domain');
+DockerCreateChainMiddleware.addSpec('docker_domains', true);

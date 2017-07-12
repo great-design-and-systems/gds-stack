@@ -3,7 +3,7 @@ import { MONGO_CONFIG, MONGO_CONNECT } from './Chain.info';
 import { Chain } from 'fluid-chains';
 import mongoose from 'mongoose';
 
-const MongoConfigAction = (context, param, next) => {
+const MongoConfigAction = (context, param) => {
     const port = param.mongo_port ? param.mongo_port() : 27017;
     const host = param.mongo_host ? param.mongo_host() : 'localhost';
     const databaseName = param.mongo_databaseName();
@@ -21,7 +21,6 @@ const MongoConfigAction = (context, param, next) => {
     url += '/';
     url += databaseName;
     context.set('mongo_url', url);
-    next();
 }
 
 const MongoConfigChain = new Chain(MONGO_CONFIG, MongoConfigAction);
@@ -32,7 +31,7 @@ MongoConfigChain.addSpec('mongo_user', false);
 MongoConfigChain.addSpec('mongo_password', false);
 
 
-const MongoConnectAction = (context, param, next, tries) => {
+const MongoConnect = (context, param, next, tries) => {
     if (!tries) {
         tries = 0;
     }
@@ -53,6 +52,8 @@ const MongoConnectAction = (context, param, next, tries) => {
     }
 }
 
-const MongoConnectChain = new Chain(MONGO_CONNECT, MongoConnectAction);
+const MongoConnectChain = new Chain(MONGO_CONNECT, (context, param, next) => {
+    MongoConnect(context, param, next);
+});
 MongoConnectChain.addSpec('mongo_url', true);
 MongoConnectChain.addSpec('mongo_retry', true);

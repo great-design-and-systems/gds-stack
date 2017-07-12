@@ -19,13 +19,12 @@ var loggerName = void 0;
 var Logger = exports.Logger = function Logger(loggerName) {
     return _log4js2.default.getLogger(loggerName);
 };
-var LoggerConfigAction = function LoggerConfigAction(context, param, next) {
+var LoggerConfigAction = function LoggerConfigAction(context, param) {
     _log4js2.default.loadAppender('file');
     _log4js2.default.addAppender(_log4js2.default.appenders.file(param.logger_filePath()), param.logger_name());
     if (param.logger_level) {
         _log4js2.default.setLevel(param.logger_level());
     }
-    next();
 };
 var LoggerConfigChain = new _fluidChains.Chain(_Chain.LOGGER_CONFIG, LoggerConfigAction);
 

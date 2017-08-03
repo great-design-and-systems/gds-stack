@@ -41,7 +41,7 @@ const MongoConnect = (context, param, next, tries) => {
                 console.error('Failed to connect to mongo on startup - retrying in 5 sec', err);
                 tries++;
                 setTimeout(() => {
-                    MongoConnectAction(context, param, next, tries);
+                    MongoConnect(context, param, next, tries);
                 }, 5000);
             } else {
                 next();
@@ -55,5 +55,5 @@ const MongoConnect = (context, param, next, tries) => {
 const MongoConnectChain = new Chain(MONGO_CONNECT, (context, param, next) => {
     MongoConnect(context, param, next);
 });
-MongoConnectChain.addSpec('mongo_url', true);
-MongoConnectChain.addSpec('mongo_retry', true);
+MongoConnectChain.addSpec('mongo_url').require();
+MongoConnectChain.addSpec('mongo_retry').require();

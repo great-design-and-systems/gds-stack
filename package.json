@@ -1,6 +1,6 @@
 {
   "name": "gds-stack",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "description": "Stack of all Great design and Systems NodeJS technologies",
   "main": "dist/index.js",
   "scripts": {

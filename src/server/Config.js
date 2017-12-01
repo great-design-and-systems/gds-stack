@@ -49,26 +49,29 @@ ServerConnectMultipartyChain.addSpec('server_tempDir', true);
 
 //ServerHTTPListenerChain
 const ServerHTTPListenerChainAction = (context, param) => {
-    const port = param.server_port ? param.server_port() : '80';
+    const port = param.server_port();
+    const host = param.server_host();
     http.createServer(app).listen(port);
-    console.log('HTTP is listening to port', port);
-}
+    console.log('HTTP is listening to port', port, host);
+};
 
 const ServerHTTPListenerChain = new Chain(GDS_SERVER_HTTP_LISTENER, ServerHTTPListenerChainAction);
-ServerHTTPListenerChain.addSpec('server_port', false);
-
+ServerHTTPListenerChain.addSpec('server_port', false).default('80');
+ServerHTTPListenerChain.addSpec('server_host', false).default('localhost');
 //ServerHTTPSListenerChain
 const ServerHTTPSListenerChainAction = (context, param) => {
-    const port = param.server_httpsPort ? param.server_httpsPort() : '443';
+    const port = param.server_httpsPort();
+    const host = param.server_httpsHost();
     const credentials = {
         key: fs.readFileSync(param.server_privateKey_path(), param.server_encoding ? param.server_encoding() : 'utf8'),
         cert: fs.readFileSync(param.server_certificate_path(), param.server_encoding ? param.server_encoding() : 'utf8')
-    }
-    https.createServer(credentials, app).listen(port);
+    };
+    https.createServer(credentials, app).listen(port, host);
     console.log('HTTPS is listening to port', port);
-}
+};
 const ServerHTTPSListenerChain = new Chain(GDS_SERVER_HTTPS_LISTENER, ServerHTTPSListenerChainAction);
-ServerHTTPSListenerChain.addSpec('server_httpsPort');
+ServerHTTPSListenerChain.addSpec('server_httpsPort').default('443');
+ServerHTTPSListenerChain.addSpec('sever_httpsHost').default('127.0.0.1');
 ServerHTTPSListenerChain.addSpec('server_privateKey_path', true);
 ServerHTTPSListenerChain.addSpec('server_certificate_path', true);
 ServerHTTPSListenerChain.addSpec('server_encoding', false);
@@ -80,7 +83,7 @@ const ServerHttpProxyListenerChain = new Chain(GDS_SERVER_HTTP_PROXY_LISTENER, (
     let currentAddress = 0;
     const proxy = httpProxy.createProxyServer({});
     http.createServer((req, res) => {
-        proxy.web(req, res, { target: addresses[currentAddress] });
+        proxy.web(req, res, {target: addresses[currentAddress]});
         currentAddress = (currentAddress + 1) % addresses.length;
     }).listen(port);
 });
@@ -98,7 +101,7 @@ const ServerHttpsProxyListenerChain = new Chain(GDS_SERVER_HTTPS_PROXY_LISTENER,
         cert: fs.readFileSync(param.server_certificate_path(), param.server_encoding ? param.server_encoding() : 'utf8')
     }
     https.createServer(credentials, (req, res) => {
-        proxy.web(req, res, { target: addresses[currentAddress] });
+        proxy.web(req, res, {target: addresses[currentAddress]});
         currentAddress = (currentAddress + 1) % addresses.length;
     }).listen(port);
 });

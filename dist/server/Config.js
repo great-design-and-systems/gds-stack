@@ -84,26 +84,29 @@ ServerConnectMultipartyChain.addSpec('server_tempDir', true);
 
 //ServerHTTPListenerChain
 var ServerHTTPListenerChainAction = function ServerHTTPListenerChainAction(context, param) {
-    var port = param.server_port ? param.server_port() : '80';
+    var port = param.server_port();
+    var host = param.server_host();
     _http2.default.createServer(app).listen(port);
-    console.log('HTTP is listening to port', port);
+    console.log('HTTP is listening to port', port, host);
 };
 
 var ServerHTTPListenerChain = new _fluidChains.Chain(_Chain.GDS_SERVER_HTTP_LISTENER, ServerHTTPListenerChainAction);
-ServerHTTPListenerChain.addSpec('server_port', false);
-
+ServerHTTPListenerChain.addSpec('server_port', false).default('80');
+ServerHTTPListenerChain.addSpec('server_host', false).default('localhost');
 //ServerHTTPSListenerChain
 var ServerHTTPSListenerChainAction = function ServerHTTPSListenerChainAction(context, param) {
-    var port = param.server_httpsPort ? param.server_httpsPort() : '443';
+    var port = param.server_httpsPort();
+    var host = param.server_httpsHost();
     var credentials = {
         key: _fs2.default.readFileSync(param.server_privateKey_path(), param.server_encoding ? param.server_encoding() : 'utf8'),
         cert: _fs2.default.readFileSync(param.server_certificate_path(), param.server_encoding ? param.server_encoding() : 'utf8')
     };
-    _https2.default.createServer(credentials, app).listen(port);
+    _https2.default.createServer(credentials, app).listen(port, host);
     console.log('HTTPS is listening to port', port);
 };
 var ServerHTTPSListenerChain = new _fluidChains.Chain(_Chain.GDS_SERVER_HTTPS_LISTENER, ServerHTTPSListenerChainAction);
-ServerHTTPSListenerChain.addSpec('server_httpsPort');
+ServerHTTPSListenerChain.addSpec('server_httpsPort').default('443');
+ServerHTTPSListenerChain.addSpec('sever_httpsHost').default('127.0.0.1');
 ServerHTTPSListenerChain.addSpec('server_privateKey_path', true);
 ServerHTTPSListenerChain.addSpec('server_certificate_path', true);
 ServerHTTPSListenerChain.addSpec('server_encoding', false);

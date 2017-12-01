@@ -99,7 +99,9 @@ Chain                             |Parameter               | Description        
 GDS_SERVER_CONFIG                 | server_domainApi       | domain dto object of the current app service | ?GDSDomainDTO  | none
 GDS_SERVER_CONNECT_MULTIPARTY     | server_tempDir         | file directory path                          | *String        | none
 GDS_SERVER_HTTP_LISTENER          | server_port            | express server http port                     | ?Number        | 80
+GDS_SERVER_HTTP_LISTENER          | server_host            | express server http host to bind
 GDS_SERVER_HTTPS_LISTENER         | server_httpsPort       | express server https port                    | ?Number        | 443
+GDS_SERVER_HTTPS_LISTENER         | server_host            | express server https host to bind
 GDS_SERVER_HTTP_PROXY_LISTENER    | server_proxyPort       | proxy server port                            | ?Number        | 8080
 GDS_SERVER_HTTPS_PROXY_LISTENER   | server_proxyHttpsPort  | proxy server https port                      | ?Number        | 443
 GDS_SERVER_HTTP(S)_PROXY_LISTENER | server_addresses       | target hosts                                 | *[{host,port}] | []

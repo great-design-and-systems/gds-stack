@@ -1,4 +1,4 @@
-import { Chain, ExecuteChain } from 'fluid-chains';
+import { Chain, ChainMiddleware, ExecuteChain } from 'fluid-chains';
 import { GDS_SERVER_CONFIG, GDS_SERVER_CONNECT_MULTIPARTY, GDS_SERVER_HTTPS_LISTENER, GDS_SERVER_HTTPS_PROXY_LISTENER, GDS_SERVER_HTTP_LISTENER, GDS_SERVER_HTTP_PROXY_LISTENER, GDS_SERVER_SOCKET_IO_LISTENER } from './Chain.info';
 
 import SocketIO from 'socket.io';
@@ -123,6 +123,10 @@ const ServerSocketIOListener = new Chain(GDS_SERVER_SOCKET_IO_LISTENER, (context
     server.listen(port, host);
     console.log('HTTP Socket Server is listening to port', port, host);
     io.on('connection', (socket) => {
+        new ChainMiddleware(/^(emit).+/gi, (param, context, next) => {
+            socket.emit(param.event(), param.emit_data());
+            next();
+        });
         for (let field in serverSocketEvents) {
             if (serverSocketEvents.hasOwnProperty(field)) {
                 const chainName = serverSocketEvents[field];

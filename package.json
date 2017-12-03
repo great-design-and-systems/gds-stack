@@ -1,6 +1,6 @@
 {
   "name": "gds-stack",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "description": "Stack of all Great design and Systems NodeJS technologies",
   "main": "dist/index.js",
   "scripts": {
@@ -32,7 +32,8 @@
     "log4js": "^1.1.1",
     "mongoose": "^4.11.0",
     "morgan": "^1.8.2",
-    "restler": "^3.4.0"
+    "restler": "^3.4.0",
+    "socket.io": "^2.0.4"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",

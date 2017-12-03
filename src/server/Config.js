@@ -1,6 +1,7 @@
-import { GDS_SERVER_CONFIG, GDS_SERVER_CONNECT_MULTIPARTY, GDS_SERVER_HTTPS_LISTENER, GDS_SERVER_HTTPS_PROXY_LISTENER, GDS_SERVER_HTTP_LISTENER, GDS_SERVER_HTTP_PROXY_LISTENER } from './Chain.info';
+import { Chain, ExecuteChain } from 'fluid-chains';
+import { GDS_SERVER_CONFIG, GDS_SERVER_CONNECT_MULTIPARTY, GDS_SERVER_HTTPS_LISTENER, GDS_SERVER_HTTPS_PROXY_LISTENER, GDS_SERVER_HTTP_LISTENER, GDS_SERVER_HTTP_PROXY_LISTENER, GDS_SERVER_SOCKET_IO_LISTENER } from './Chain.info';
 
-import { Chain } from 'fluid-chains';
+import SocketIO from 'socket.io';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import express from 'express';
@@ -51,7 +52,7 @@ ServerConnectMultipartyChain.addSpec('server_tempDir', true);
 const ServerHTTPListenerChainAction = (context, param) => {
     const port = param.server_port();
     const host = param.server_host();
-    http.createServer(app).listen(port);
+    http.createServer(app).listen(port, host);
     console.log('HTTP is listening to port', port, host);
 };
 
@@ -83,7 +84,7 @@ const ServerHttpProxyListenerChain = new Chain(GDS_SERVER_HTTP_PROXY_LISTENER, (
     let currentAddress = 0;
     const proxy = httpProxy.createProxyServer({});
     http.createServer((req, res) => {
-        proxy.web(req, res, {target: addresses[currentAddress]});
+        proxy.web(req, res, { target: addresses[currentAddress] });
         currentAddress = (currentAddress + 1) % addresses.length;
     }).listen(port);
 });
@@ -101,7 +102,7 @@ const ServerHttpsProxyListenerChain = new Chain(GDS_SERVER_HTTPS_PROXY_LISTENER,
         cert: fs.readFileSync(param.server_certificate_path(), param.server_encoding ? param.server_encoding() : 'utf8')
     }
     https.createServer(credentials, (req, res) => {
-        proxy.web(req, res, {target: addresses[currentAddress]});
+        proxy.web(req, res, { target: addresses[currentAddress] });
         currentAddress = (currentAddress + 1) % addresses.length;
     }).listen(port);
 });
@@ -110,3 +111,35 @@ ServerHttpsProxyListenerChain.addSpec('server_addresses', true);
 ServerHttpsProxyListenerChain.addSpec('server_privateKey_path', true);
 ServerHttpsProxyListenerChain.addSpec('server_certificate_path', true);
 ServerHttpsProxyListenerChain.addSpec('server_encoding', false);
+
+
+// using socket io server
+const ServerSocketIOListener = new Chain(GDS_SERVER_SOCKET_IO_LISTENER, (context, param) => {
+    const port = param.server_port();
+    const host = param.server_host();
+    const serverSocketEvents = param.server_socket_events();
+    const server = http.createServer(app);
+    const io = SocketIO(server);
+    server.listen(port, host);
+    console.log('HTTP Socket Server is listening to port', port, host);
+    io.on('connection', (socket) => {
+        for (let field in serverSocketEvents) {
+            if (serverSocketEvents.hasOwnProperty(field)) {
+                const chainName = serverSocketEvents[field];
+                console.log('Socket listening to event', field);
+                socket.on(field, (data) => {
+                    ExecuteChain(chainName, data, (result) => {
+                        if (result.$err) {
+                            console.error('Failed on socket event', field);
+                            console.error(result.$err);
+                        }
+                    });
+                });
+            }
+        }
+    });
+});
+
+ServerSocketIOListener.addSpec('server_port').default('80');
+ServerSocketIOListener.addSpec('server_host').default('localhost');
+ServerSocketIOListener.addSpec('server_socket_events').default({});

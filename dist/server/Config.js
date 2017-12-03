@@ -5,9 +5,13 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.ExpressApp = undefined;
 
+var _fluidChains = require('fluid-chains');
+
 var _Chain = require('./Chain.info');
 
-var _fluidChains = require('fluid-chains');
+var _socket = require('socket.io');
+
+var _socket2 = _interopRequireDefault(_socket);
 
 var _bodyParser = require('body-parser');
 
@@ -86,7 +90,7 @@ ServerConnectMultipartyChain.addSpec('server_tempDir', true);
 var ServerHTTPListenerChainAction = function ServerHTTPListenerChainAction(context, param) {
     var port = param.server_port();
     var host = param.server_host();
-    _http2.default.createServer(app).listen(port);
+    _http2.default.createServer(app).listen(port, host);
     console.log('HTTP is listening to port', port, host);
 };
 
@@ -145,3 +149,38 @@ ServerHttpsProxyListenerChain.addSpec('server_addresses', true);
 ServerHttpsProxyListenerChain.addSpec('server_privateKey_path', true);
 ServerHttpsProxyListenerChain.addSpec('server_certificate_path', true);
 ServerHttpsProxyListenerChain.addSpec('server_encoding', false);
+
+// using socket io server
+var ServerSocketIOListener = new _fluidChains.Chain(_Chain.GDS_SERVER_SOCKET_IO_LISTENER, function (context, param) {
+    var port = param.server_port();
+    var host = param.server_host();
+    var serverSocketEvents = param.server_socket_events();
+    var server = _http2.default.createServer(app);
+    var io = (0, _socket2.default)(server);
+    server.listen(port, host);
+    console.log('HTTP Socket Server is listening to port', port, host);
+    io.on('connection', function (socket) {
+        var _loop = function _loop(field) {
+            if (serverSocketEvents.hasOwnProperty(field)) {
+                var chainName = serverSocketEvents[field];
+                console.log('Socket listening to event', field);
+                socket.on(field, function (data) {
+                    (0, _fluidChains.ExecuteChain)(chainName, data, function (result) {
+                        if (result.$err) {
+                            console.error('Failed on socket event', field);
+                            console.error(result.$err);
+                        }
+                    });
+                });
+            }
+        };
+
+        for (var field in serverSocketEvents) {
+            _loop(field);
+        }
+    });
+});
+
+ServerSocketIOListener.addSpec('server_port').default('80');
+ServerSocketIOListener.addSpec('server_host').default('localhost');
+ServerSocketIOListener.addSpec('server_socket_events').default({});

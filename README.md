@@ -122,3 +122,11 @@ CLUSTER_CONFIG|cluster_max_cpu| Number of cpu to fork|?Number        | os cpu co
 Chain                             |Parameter               | Description                                   | value                | default
 ----------------------------------|------------------------|-----------------------------------------------|----------------------| ----------
 INPUT_HANDLER                     | util_inputMap          | maps the process.argv value to a context field| *{argv[index]:String}| none
+
+
+### SocketIO Listener
+Chain                        | Parameter            | Description                      | value                                     | default
+-----------------------------|----------------------|----------------------------------|-------------------------------------------|-----------
+GDS_SERVER_SOCKET_IO_LISTENER| server_host          | Http server host                 | String                                    | localhost
+GDS_SERVER_SOCKET_IO_LISTENER| server_port          | Http server port                 | String                                    | localhost
+GDS_SERVER_SOCKET_IO_LISTENER| server_socket_events | This is where you put the events | Object: {event(String):chainName(String)} | localhost

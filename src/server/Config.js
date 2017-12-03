@@ -124,7 +124,7 @@ const ServerSocketIOListener = new Chain(GDS_SERVER_SOCKET_IO_LISTENER, (context
     console.log('HTTP Socket Server is listening to port', port, host);
     io.on('connection', (socket) => {
         new ChainMiddleware(/^(emit).+/gi, (param, context, next) => {
-            socket.emit(param.event(), param.emit_data());
+            socket.emit(param.event, param.emit_data);
             next();
         });
         for (let field in serverSocketEvents) {

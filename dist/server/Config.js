@@ -161,7 +161,7 @@ var ServerSocketIOListener = new _fluidChains.Chain(_Chain.GDS_SERVER_SOCKET_IO_
     console.log('HTTP Socket Server is listening to port', port, host);
     io.on('connection', function (socket) {
         new _fluidChains.ChainMiddleware(/^(emit).+/gi, function (param, context, next) {
-            socket.emit(param.event(), param.emit_data());
+            socket.emit(param.event, param.emit_data);
             next();
         });
 

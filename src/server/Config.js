@@ -4,6 +4,7 @@ import { GDS_SERVER_CONFIG, GDS_SERVER_CONNECT_MULTIPARTY, GDS_SERVER_HTTPS_LIST
 import SocketIO from 'socket.io';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
+import cors from 'cors';
 import express from 'express';
 import fs from 'fs';
 import http from 'http';
@@ -24,6 +25,7 @@ const ServerConfigChainAction = (context, param) => {
     app.use(bodyParser.urlencoded({
         extended: true
     }));
+    app.use(cors(param.server_cors()));
     app.use(cookieParser());
     app.use(bodyParser.json());
     app.use(bodyParser.json({
@@ -37,7 +39,12 @@ const ServerConfigChainAction = (context, param) => {
 }
 const ServerConfigChain = new Chain(GDS_SERVER_CONFIG, ServerConfigChainAction);
 ServerConfigChain.addSpec('server_domainApi');
-
+ServerConfigChain.addSpec('server_cors').default({
+    origin: '*',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    preflightContinue: false,
+    optionsSuccessStatus: 204
+});
 //ServerConnectMultipartyChain
 const ServerConnectMultipartyAction = (context, param) => {
     app.use(multipart({

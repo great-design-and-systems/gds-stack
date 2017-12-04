@@ -21,6 +21,10 @@ var _cookieParser = require('cookie-parser');
 
 var _cookieParser2 = _interopRequireDefault(_cookieParser);
 
+var _cors = require('cors');
+
+var _cors2 = _interopRequireDefault(_cors);
+
 var _express = require('express');
 
 var _express2 = _interopRequireDefault(_express);
@@ -62,6 +66,7 @@ var ServerConfigChainAction = function ServerConfigChainAction(context, param) {
     app.use(_bodyParser2.default.urlencoded({
         extended: true
     }));
+    app.use((0, _cors2.default)(param.server_cors()));
     app.use((0, _cookieParser2.default)());
     app.use(_bodyParser2.default.json());
     app.use(_bodyParser2.default.json({
@@ -75,7 +80,12 @@ var ServerConfigChainAction = function ServerConfigChainAction(context, param) {
 };
 var ServerConfigChain = new _fluidChains.Chain(_Chain.GDS_SERVER_CONFIG, ServerConfigChainAction);
 ServerConfigChain.addSpec('server_domainApi');
-
+ServerConfigChain.addSpec('server_cors').default({
+    origin: '*',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    preflightContinue: false,
+    optionsSuccessStatus: 204
+});
 //ServerConnectMultipartyChain
 var ServerConnectMultipartyAction = function ServerConnectMultipartyAction(context, param) {
     app.use((0, _connectMultiparty2.default)({

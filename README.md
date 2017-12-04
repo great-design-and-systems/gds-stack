@@ -97,6 +97,7 @@ MONGO_CONFIG | mongo_password | mongo database password | ?String | none
 Chain                             |Parameter               | Description                                  | value          | default
 ----------------------------------|------------------------|----------------------------------------------|----------------| ----------
 GDS_SERVER_CONFIG                 | server_domainApi       | domain dto object of the current app service | ?GDSDomainDTO  | none
+GDS_SERVER_CONFIG                 | server_cors            | Cors option                                  | Object         | default cors option
 GDS_SERVER_CONNECT_MULTIPARTY     | server_tempDir         | file directory path                          | *String        | none
 GDS_SERVER_HTTP_LISTENER          | server_port            | express server http port                     | ?Number        | 80
 GDS_SERVER_HTTP_LISTENER          | server_host            | express server http host to bind
